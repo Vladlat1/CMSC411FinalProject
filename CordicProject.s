@@ -13,7 +13,7 @@ SIN: .word 0x00000000
 COSH: .word 0
 SINH: .word 0
 EX: .word 0
-theta: .word 0x00420000 @Theta is 15 Degrees           
+theta: .word 0x000F0000 @Theta is 15 Degrees           
 
 .text
 .global main
@@ -79,11 +79,12 @@ start_hyp:
 	ldr r7, [r0]
 	mov r9, #1
 	ldr r12, =hyper_ctab
-
+	mov r8, #0
 
 
 
 looph:
+
 	cmp r9, r11		@check if we have hit the limit
 	beq end_hyp
 	ldr r4,[r12]	@load table[n]
@@ -97,6 +98,10 @@ looph:
 	add r3, r3, r0 	@add shifted y from x 
 	add r5, r5, r2 	@add shifted x to y
 	sub r7, r7,r4	@update current angle
+	cmp r9, #13
+	beq rep
+	cmp r9, #4
+	beq rep
 	add r9,#1
 	b looph
 
@@ -108,9 +113,20 @@ negh:
 	sub r3, r3, r0 	@sub shifted y from x 
 	sub r5, r5, r2 	@sub shifted x to y
 	add r7, r7,r4	@update current angle
+	cmp r9, #13
+	beq rep
+	cmp r9, #4
+	beq rep
 	add r9,#1
 	b looph
-	
+rep:
+	cmp r8, #0
+	beq yes
+	add r9,#1
+	b looph
+yes:
+	add r8,#1
+	b looph
 
 end_hyp:
 	ldr r8, =COSH
