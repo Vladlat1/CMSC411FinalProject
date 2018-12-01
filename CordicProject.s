@@ -35,7 +35,7 @@ main:
 	ldr r12, =cordic_ctab	@load tables first value
 loop:
 	cmp r9, r11		@check if we have hit the limit
-	beq end
+	beq end_rot
 	ldr r4,[r12]	@load table[n]
 	add r12, #4		@increment table
 	cmp r7,#0		@compare current angle to 0
@@ -62,7 +62,7 @@ neg:
 	b loop
 	
 
-end:
+end_rot:
 	ldr r8, =COS
 	str r3, [r8]
 	add r8, #4
